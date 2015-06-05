@@ -1,0 +1,18 @@
+{
+    "contents" : "### Required packages\n``` {r, message=F, warning=F}\nrequire(dplyr)\nrequire(tidyr)\nrequire(knitr)\nrequire(ggplot2)\nrequire(gridExtra)\n```\n### Source file\n``` {r, results=\"hide\"}\nfileURL <- \"https://data.openjerseycity.org/dataset/d18a7e84-d236-4510-a905-361d7153215f/resource/0c375385-c622-42a6-878b-b6a178d4182a/download/jerseycitypublicemployeeswithtitlesandhiredates20feb2014.csv\"\n\ndownload.file(fileURL, destfile = \"./data/jcdata.csv\", method = \"curl\" )\ndateDownload <- date()\ndateDownload\n```\nThis file was downloaded: `r dateDownload`.\n\n### Processing\n``` {r, warning=F}\ndf_local <- tbl_df(read.csv(\"./data/jcdata.csv\", stringsAsFactors = FALSE ))\ndf_sep <- df_local %>% \n    separate(SALARY, c(\"D\", \"C\"), sep = 1) %>% \n    separate(C, c(\"E\", \"G\"), sep = \",\", extra = \"merge\") %>% \n    unite(SALARY, E, G, sep = \"\") %>% \n    separate(LOCD, c(\"Dept\", \"J\"), sep = \"‐\", extra = \"merge\") \ndf_sep <- group_by(df_sep, Dept)\ndf_sep$SALARY <- as.numeric(df_sep$SALARY)\ndf_summ <- summarise(df_sep, Mean = mean(SALARY, na.rm = TRUE))\ndf_summ$Mean <- round(df_summ$Mean, digits = 0)\narrange(df_summ,desc(Mean))\n```\n\n### Plot Generation and Display\n``` {r}\np1 <- ggplot(data=df_summ, aes(x=reorder(Dept, Mean),y=Mean, fill = Dept)) +\n    geom_bar(stat=\"identity\") +\n    coord_flip() +\n    labs(title=\"JC Average Salary\\n 2014\") +\n    theme(legend.position=\"none\") +\n    xlab(\"Department\") +\n    ylab(\"Average Salary\")\ng <- arrangeGrob(p1, sub = textGrob(\"Footnote: For details see: https://github.com/tbruning/JC_Salary/jc.html\", x = 0, hjust = -0.1, vjust=0.1, gp = gpar(fontface = \"italic\", fontsize = 12)))\ng\n```",
+    "created" : 1433541273653.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "78024633",
+    "id" : "9E70880B",
+    "lastKnownWriteTime" : 1433545216,
+    "path" : "~/Downloads/r_Pgms/JCData/final.Rmd",
+    "project_path" : "final.Rmd",
+    "properties" : {
+        "tempName" : "Untitled2"
+    },
+    "relative_order" : 4,
+    "source_on_save" : false,
+    "type" : "r_markdown"
+}
