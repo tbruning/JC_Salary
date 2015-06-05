@@ -18,7 +18,6 @@ df_sep$SALARY <- as.numeric(df_sep$SALARY)
 df_summ <- summarise(df_sep, Mean = mean(SALARY, na.rm = TRUE), Employees = n())
 df_summ$Mean <- round(df_summ$Mean, digits = 0)
 arrange(df_summ,desc(Mean))
-<<<<<<< HEAD
 require(dplyr)
 require(ggplot2)
 require(RColorBrewer)
@@ -43,5 +42,3 @@ p2 <- ggplot(data=df_summ, aes(x=reorder(Dept, Mean),y=Mean, fill = Dept)) +
     ylab("Average Salary")
 grid.arrange(p1, p2, ncol = 2)
 g
-=======
->>>>>>> 34b875ae81e5a813a169d1d84fd1a5887916c49c
